@@ -31,29 +31,37 @@ Use the Python and Streamlit inside `.venv`. The system `python3` and a bare `st
 .venv/bin/python 03_reducers.py
 .venv/bin/python 04_conditional_edges.py
 .venv/bin/python 05_loops.py
-.venv/bin/python 06_multi_agent.py
+.venv/bin/python 06_agent_tools.py
+.venv/bin/python 07_finadvise_bot.py
+.venv/bin/python 08_multi_agent.py
 ```
 
-Lesson 6 accepts your own question:
+Lesson 8 accepts your own question:
 
 ```bash
-.venv/bin/python 06_multi_agent.py "Explain reducers and state in LangGraph"
+.venv/bin/python 08_multi_agent.py "Explain reducers and state in LangGraph"
 ```
 
 ## Run the UI
 
-`app.py` is the browser UI. It does not run lessons 01–05. It runs the same graph as lesson 6, imported from `multi_agent/`:
-
-- `multi_agent/agents.py` — supervisor, researcher, writer, reviewer, calculator
-- `multi_agent/workflow.py` — how those agents are connected
-
-Start it with the Streamlit binary inside the virtual environment:
+There are two Streamlit apps. Always start them with the binary inside `.venv`:
 
 ```bash
+# Lesson 6 — agent + tools (ReAct loop)
+.venv/bin/streamlit run app_agent_tools.py
+
+# Lesson 8 — multi-agent supervisor
 .venv/bin/streamlit run app.py
 ```
 
-Then open [http://localhost:8501](http://localhost:8501). Press `Ctrl+C` in that terminal to stop it.
+Open [http://localhost:8501](http://localhost:8501). Press `Ctrl+C` in that terminal to stop it.
+
+`app_agent_tools.py` imports the compiled `graph` from `06_agent_tools.py` and streams each node so you can see `agent` → `tools` → `agent`.
+
+`app.py` runs the same graph as lesson 8, imported from `multi_agent/`:
+
+- `multi_agent/agents.py` — supervisor, researcher, writer, reviewer, calculator
+- `multi_agent/workflow.py` — how those agents are connected
 
 `streamlit run app.py` fails with `command not found: streamlit` until the virtual environment is on your `PATH`. `python3 app.py` also fails, because the system Python does not have Streamlit and Streamlit has to launch the file.
 
@@ -91,8 +99,11 @@ Things to try:
 | `03_reducers.py` | Appending to a list with `Annotated[list, operator.add]` | Four messages, one per step |
 | `04_conditional_edges.py` | A router function picks the next node | A positive and a negative reply, plus a Mermaid diagram |
 | `05_loops.py` | A node that loops back to itself until a condition is met | Random guesses until it finds 7 |
-| `06_multi_agent.py` | Supervisor delegating to specialist agents | A numbered trace, then the final answer |
-| `app.py` | The same graph as lesson 6, drawn in the browser | UI at http://localhost:8501 |
+| `06_agent_tools.py` | ReAct loop: agent decides when to call tools | Stock, expense, and budget answers with thought steps |
+| `07_finadvise_bot.py` | Intent routing plus memory across turns | Stock / expense / budget replies, memory carried forward |
+| `08_multi_agent.py` | Supervisor delegating to specialist agents | A numbered trace, then the final answer |
+| `app_agent_tools.py` | Browser UI for lesson 6 | Live agent → tools → agent trace |
+| `app.py` | Browser UI for lesson 8 | UI at http://localhost:8501 |
 
 For lesson 4, paste the printed diagram into [mermaid.live](https://mermaid.live).
 
